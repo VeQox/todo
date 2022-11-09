@@ -14,6 +14,7 @@
   "dependencies": {
     "@supabase/auth-helpers-sveltekit": "^0.8.6",
     "@supabase/supabase-js": "^2.0.5",
+    "@sveltejs/adapter-node": "^1.0.0-next.100",
     "@tauri-apps/api": "^1.1.0",
     "svelte-dragdroplist": "^1.1.1"
   },
