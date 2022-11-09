@@ -12,6 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Switch to root directory
+        run: cd ./todo
+      - name: Print out directory
         run: ls
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
