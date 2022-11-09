@@ -18,4 +18,6 @@
 
 </script>
 
-<slot />
+<div class="w-screen h-screen bg-neutral-900 text-neutral-400">
+  <slot />
+</div>

@@ -1,3 +1,5 @@
+<!--
+
 <script lang="ts">
     import { page } from '$app/stores';
     import { supabaseClient } from '$lib/db';
@@ -50,3 +52,10 @@
 <div class="py-4"></div>
 
 <button on:click={logout}>Logout</button>
+-->
+
+<script lang="ts">
+    import Auth from "$lib/Auth.svelte";
+</script>
+
+<Auth/>
