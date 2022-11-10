@@ -1,4 +1,4 @@
-export interface ITodo {
+export default interface ITodo {
     id:string,
     user_id:string,
     text:string,

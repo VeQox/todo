@@ -1,6 +1,6 @@
 <script lang="ts">
     import { page } from "$app/stores";
-    import type { ITodo } from "$lib/todo";
+    import type ITodo from "$lib/Todo";
     import { onMount } from "svelte";
     import { supabaseClient } from "./db";
 
