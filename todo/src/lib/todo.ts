@@ -1,6 +1,5 @@
 export default interface ITodo {
-    id:string,
-    user_id:string,
+    id:number,
     text:string,
     completed:boolean,
     created_at:Date,

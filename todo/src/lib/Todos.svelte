@@ -1,10 +1,9 @@
 <script lang="ts">
     import { page } from "$app/stores";
     import type ITodo from "$lib/Todo";
-    import { onMount } from "svelte";
     import { supabaseClient } from "./db";
+    import { Todos } from "../stores/todostore"
 
-    let Todos : ITodo[] = [];
     let newTodoText : string;
 
     const addTodo = async() => {
@@ -17,52 +16,30 @@
         });
 
         newTodoText = "";
-        loadTodos();
-    }
-    const loadTodos = async() => {
-        if(!$page.data.session) return;
-
-        const {data, error} = await supabaseClient.from("todos")
-            .select();
-    
-        if(error)  return;
-        if(data == null) return;
-
-        Todos = data;
     }
     const changeStateOfTodo = async(i : number) => {
-        let Todo : ITodo = Todos[i];
+        let Todo : ITodo = $Todos[i];
 
         Todo.completed = !Todo.completed;
 
         const {error} = await supabaseClient.from("todos")
             .update({completed: Todo.completed})
             .match({id:Todo.id})
-        
-        loadTodos();
     }
     const changeTextOfTodo = async(i : number) => {
-        let Todo : ITodo = Todos[i];
+        let Todo : ITodo = $Todos[i];
 
         const {error} = await supabaseClient.from("todos")
             .update({text:Todo.text})
             .match({id:Todo.id});
-
-        loadTodos();
     }
     const removeTodoFromList = async(i : number) => {
-        let Todo : ITodo = Todos[i];
+        let Todo : ITodo = $Todos[i];
 
         const {error} = await supabaseClient.from("todos")
             .delete()
             .match({id:Todo.id})
-
-        loadTodos();
     }
-
-    onMount(() => {
-        loadTodos();
-    })
 </script>
 
 <form on:submit|preventDefault={() => {
@@ -72,7 +49,7 @@
 </form>
 
 <div class="mt-1">
-{#each Todos as todoItem, i}
+{#each $Todos as todoItem, i}
     <div>
         <div class="grid grid-cols-12 items-center cursor-pointer pt-2">
             <div class="flex justify-center items-center">
