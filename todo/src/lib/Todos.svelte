@@ -1,45 +1,26 @@
 <script lang="ts">
-    import { page } from "$app/stores";
-    import type ITodo from "$lib/Todo";
-    import { supabaseClient } from "./db";
-    import { Todos } from "../stores/todostore"
+    import { Todos, loadTodos, addTodoItem, deleteTodoItem, updateTodoItemStatus, updateTodoItemText } from "../stores/todostore"
+    import { onMount } from "svelte";
 
     let newTodoText : string;
 
     const addTodo = async() => {
-        if($page.data.session == null) return;
-        if(newTodoText.length == 0) return
-
-        const {data, error} = await supabaseClient.from("todos").insert({
-            text:newTodoText,
-            user_id:$page.data.session.user.id
-        });
-
+        console.log(await addTodoItem(newTodoText))
         newTodoText = "";
     }
     const changeStateOfTodo = async(i : number) => {
-        let Todo : ITodo = $Todos[i];
-
-        Todo.completed = !Todo.completed;
-
-        const {error} = await supabaseClient.from("todos")
-            .update({completed: Todo.completed})
-            .match({id:Todo.id})
+        console.log(await updateTodoItemStatus($Todos[i].id, $Todos[i].completed))
     }
     const changeTextOfTodo = async(i : number) => {
-        let Todo : ITodo = $Todos[i];
-
-        const {error} = await supabaseClient.from("todos")
-            .update({text:Todo.text})
-            .match({id:Todo.id});
+        console.log(await updateTodoItemText($Todos[i].id, $Todos[i].text))
     }
     const removeTodoFromList = async(i : number) => {
-        let Todo : ITodo = $Todos[i];
-
-        const {error} = await supabaseClient.from("todos")
-            .delete()
-            .match({id:Todo.id})
+        console.log(await deleteTodoItem($Todos[i].id));
     }
+
+    onMount( async() => {
+        await loadTodos();
+    }) 
 </script>
 
 <form on:submit|preventDefault={() => {
