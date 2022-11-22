@@ -15,11 +15,22 @@
       subscription.unsubscribe()
     }
   })
-
-  let awd = "bg-neutral-900"
 </script>
 
-<div class="w-screen h-screen bg-neutral-900 text-neutral-400">
+<div class="w-screen h-screen bg-neutral-900 text-neutral-400 overflow-hidden">
+  <div class="border-b-2 border-neutral-800">
+    <ul class="flex justify-around items-center">
+      <li>
+        <a href="/">Home</a>
+      </li>
+      <li>  
+        <a href="auth/">Auth</a>
+      </li>
+      <li>  
+        <a href="account/">Account</a>
+      </li>
+    </ul>
+  </div>
   <slot />
 </div>
 

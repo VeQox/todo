@@ -4,8 +4,8 @@ import { getSupabase } from '@supabase/auth-helpers-sveltekit'
 
 export const actions: Actions = {
   login: async (event) => {
-    const { request, cookies, url } = event
-    const { session, supabaseClient } = await getSupabase(event)
+    const { request } = event
+    const { supabaseClient } = await getSupabase(event)
     const formData = await request.formData()
 
     const email = formData.get('email') as string;
@@ -18,10 +18,9 @@ export const actions: Actions = {
 
     if (error) {
       return invalid(400, {
-        error: 'login failed',
-        values: {
-          email,
-        },
+        error: true,
+        errormsg: "invalid credentials",
+        email: email,
       })
     }
 
@@ -29,8 +28,8 @@ export const actions: Actions = {
   },
 
   register: async (event) => {
-    const { request, cookies, url } = event
-    const { session, supabaseClient } = await getSupabase(event)
+    const { request } = event
+    const { supabaseClient } = await getSupabase(event)
     const formData = await request.formData();
 
     const email = formData.get('email') as string;
@@ -42,15 +41,12 @@ export const actions: Actions = {
     });
 
     if(error) {
-      return invalid(402, {
-        error: 'register failed',
-        values: {
-          email,
-        },
-      })
-    }
-
-    throw redirect(303, "/")
+      return invalid(400, {
+        error: true,
+        errormsg: "wtf",
+        email: email,
+      });
+    };
   },
 
   logout: async (event) => {

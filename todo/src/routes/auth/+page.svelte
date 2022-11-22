@@ -5,7 +5,7 @@
 <div class="flex justify-center items-center h-screen">
     <div class="w-1/2">
         <div class="grid grid-cols-2">
-            <button class="h-10 { viewLogIn ? "bg-neutral-800 hover:bg-neutral-700" : "bg-green-800 hover:bg-green-700" } rounded-tl-md"
+            <button class="{ viewLogIn ? "bg-neutral-800 hover:bg-neutral-700" : "bg-green-800 hover:bg-green-700" } h-10 rounded-tl-md"
             on:click={() => viewLogIn = false }
             >
                 Sign Up
