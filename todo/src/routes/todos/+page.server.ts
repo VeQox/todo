@@ -3,19 +3,36 @@ import { invalid, redirect } from '@sveltejs/kit'
 import { getSupabase } from '@supabase/auth-helpers-sveltekit'
 
 export const actions: Actions = {
-  add: (event) => {
+  add: async (event) => {
     const { request } = event
-  },
-  updateText: (event) => {
+    const { supabaseClient } = await getSupabase(event)
+    const formData = await request.formData()
 
-  },
-  updateStatus: (event) => {
+    const title = formData.get("title") as string;
+    const description = formData.get("description") as string;
+    const user_id = (await supabaseClient.auth.getUser()).data.user?.id;
 
-  },
-  remove: (event) => {
+    if(user_id == undefined || title == undefined || title.length < 3) return { success: false}
 
+    const {error, data} = await supabaseClient
+      .from("todos")
+      .insert({
+        user_id: user_id,
+        title:title,
+        description:description,
+      });
+
+    if(error) return { success: false}
+    return { success: true}
   },
-  test: (event) => {
-    console.log(event)
-  }
+  remove: async (event) => {
+    const { request } = event
+    const { supabaseClient } = await getSupabase(event)
+    const formData = await request.formData()
+  },
+  update: async (event) => {
+    const { request } = event
+    const { supabaseClient } = await getSupabase(event)
+    const formData = await request.formData()
+  },
 }
