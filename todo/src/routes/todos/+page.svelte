@@ -18,7 +18,8 @@
 <form action="?/add" method="post" use:enhance={({form, data, action, cancel}) => {
         return async ({ result, update }) => {
           if(result.type == "success"){
-            form.reset();
+            todoTitle = "";
+            todoDescription = "";
           }
         };
     }}>
@@ -37,9 +38,7 @@
       <p>{todoDescriptionCharCount}</p>
     </div>
   </div>  
-  <button type="submit">
-
-  </button>
+  <button type="submit"></button>
 </form>
 
 
