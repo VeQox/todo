@@ -12,7 +12,10 @@ export const actions: Actions = {
     const description = formData.get("description") as string;
     const user_id = (await supabaseClient.auth.getUser()).data.user?.id;
 
-    if(user_id == undefined || title == undefined || title.length < 3 || title.length > 100 || description.length > 250) return { success: false}
+    if(user_id == undefined 
+      || title.length < 3 
+      || title.length > 100 
+      || description.length > 250) return invalid(400, {text: "invalid params"})
 
     const {error, data} = await supabaseClient
       .from("todos")
@@ -22,22 +25,24 @@ export const actions: Actions = {
         description:description,
       });
 
-    if(error) return { success: false}
+    if(error) return invalid(400, {text:"insert failed"})
     return { success: true}
   },
   remove: async (event) => {
     const { request, url} = event
     const { supabaseClient } = await getSupabase(event)
-    const formData = await request.formData()
 
     const id = url.searchParams.get('id');
+
+    if(id === null) return invalid(400, {text:"invalid id"})
 
     const {data, error} = await supabaseClient
       .from("todos")
       .delete()
       .match({id:id});
 
-    return {sucess: error === null}
+    if(error) return invalid(400, {text:"delete failed"})
+      return { success: true}
   },
   update: async (event) => {
     const { request } = event

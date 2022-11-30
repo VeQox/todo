@@ -2,7 +2,7 @@
   import { enhance } from "$app/forms";
   import { onMount } from "svelte";
   import { loadTodos, Todos } from "../../stores/todostore";
-
+ 
   onMount(async() => {
     await loadTodos();
   });
@@ -16,7 +16,7 @@
 
 <form action="?/add" method="post" use:enhance={({form, data, action, cancel}) => {
         return async ({ result, update }) => {
-          if(result.type == "success"){
+          if(result.type === "success"){
             todoTitle = "";
             todoDescription = "";
           }
