@@ -5,7 +5,6 @@
 
   onMount(async() => {
     await loadTodos();
-    console.log($Todos)
   });
 
   export let form;
@@ -43,15 +42,23 @@
 
 
 <div class="w-full flex justify-center">
-  <div class="w-11/12">
+  <div class="w-11/12 grid grid-cols-12">
     {#each $Todos as todo, i}
-      <div class="flex justify-center">
+      <div class="col-span-11 flex justify-center">
         {todo.id}
         {todo.title}
         {todo.description}
         {todo.deadline}
         {todo.created_at}
         {todo.completed}
+      </div>
+      <div class="">
+        <form method="post" action="?/remove&id={todo.id}"  use:enhance={({form, data, action, cancel}) => {
+          return async ({ result, update }) => {
+          };
+      }}>
+          <button type="submit">X</button>
+        </form>
       </div>
     {/each}
   </div>
