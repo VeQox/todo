@@ -1,2 +1,1 @@
-import '$lib/db';
-
+import '$lib/db'

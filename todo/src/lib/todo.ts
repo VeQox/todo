@@ -1,6 +1,8 @@
 export default interface ITodo {
-    id:number,
-    text:string,
-    completed:boolean,
-    created_at:Date,
+  id: number,
+  title: string,
+  description: string,
+  completed: boolean,
+  deadline: Date,
+  created_at: Date,
 };
