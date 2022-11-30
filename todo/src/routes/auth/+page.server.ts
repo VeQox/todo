@@ -1,46 +1,57 @@
-import { tick } from "svelte"
-import { supabaseClient } from "$lib/db";
-import { invalid, redirect } from '@sveltejs/kit';
+import type { Actions } from './$types'
+import { invalid, redirect } from '@sveltejs/kit'
+import { getSupabase } from '@supabase/auth-helpers-sveltekit'
 
-export const prerender = false;
+export const actions: Actions = {
+  login: async (event) => {
+    const { request } = event
+    const { supabaseClient } = await getSupabase(event)
+    const formData = await request.formData()
 
-/** @type {import('./$types').Actions} */
-export const actions = {
-    login: async ({cookies, request} : {cookies : any, request:any}) => {
-        await tick();
-        const tmp = await request.formData();
-        const email = tmp.get("email");
-        const password : string = tmp.get("password");
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
 
-        const { data, error } = await supabaseClient.auth.signInWithPassword({
-            password:password,
-            email:email,
-        });
-        
-        if(error) return invalid(400);
+    const { error } = await supabaseClient.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-        console.log(data)
-
-        throw redirect(303, "/todos")
-    },
-    register: async ({cookies, request} : {cookies : any, request : any}) => {
-        await tick();
-        const data = await request.formData();
-        const email = data.get("email");
-        const password : string = data.get("password");
-
-        if(!email) return invalid(400, {email});
-
-        if(!password) return invalid(400, {password});
-        if(!password.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$")) return invalid(400);
-
-        const { error } = await supabaseClient.auth.signUp({
-            password:password,
-            email:email,
-        });
-        
-        if(error) return invalid(400);
-
-        throw redirect(303, "/todos")
+    if (error) {
+      return invalid(400, {
+        error: true,
+        errormsg: "invalid credentials",
+        email: email,
+      })
     }
-};
+
+    throw redirect(303, '/')
+  },
+
+  register: async (event) => {
+    const { request } = event
+    const { supabaseClient } = await getSupabase(event)
+    const formData = await request.formData();
+
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
+    const { error } = await supabaseClient.auth.signUp({
+      password:password,
+      email:email,
+    });
+
+    if(error) {
+      return invalid(400, {
+        error: true,
+        errormsg: "wtf",
+        email: email,
+      });
+    };
+  },
+
+  logout: async (event) => {
+    const { supabaseClient } = await getSupabase(event)
+    await supabaseClient.auth.signOut()
+    throw redirect(303, '/')
+  },
+}
