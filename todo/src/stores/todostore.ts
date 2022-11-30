@@ -1,6 +1,7 @@
 import { writable, get } from "svelte/store";
 import { supabaseClient } from "$lib/db";
 import type ITodo from "$lib/todo";
+import { component_subscribe } from "svelte/internal";
 
 const table = "todos";
 const maxTextLength = 280;
@@ -18,6 +19,8 @@ const subscribeToDatabase = async(table : string) => {
 
 const handleInsertEvent = (payload : any) => {
     const newTodoItem : ITodo = payload.new;
+
+    console.log(newTodoItem)
 
     Todos.update( (todo) => {
         return [...todo, newTodoItem];
@@ -42,8 +45,6 @@ const handleUpdateEvent = (payload : any) => {
 }
 const handleDeleteEvent = (payload : any) => {
     const ID = payload.old.id;
-
-    console.log(payload)
 
     Todos.update(todos => todos.filter(todo => todo.id != ID));
     console.log("handleDeleteEvent")

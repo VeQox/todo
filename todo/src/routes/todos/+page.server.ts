@@ -45,8 +45,28 @@ export const actions: Actions = {
       return { success: true}
   },
   update: async (event) => {
-    const { request } = event
+    const { request, url } = event
     const { supabaseClient } = await getSupabase(event)
     const formData = await request.formData()
+
+    const title = formData.get("title") as string;
+    const description = formData.get("description") as string;
+    const user_id = (await supabaseClient.auth.getUser()).data.user?.id;
+    
+    const id = url.searchParams.get('id');
+    if(id === null) return invalid(400, {text:"invalid id"})
+
+    if(user_id == undefined 
+      || title?.length < 3 
+      || title?.length > 100 
+      || description?.length > 250) return invalid(400, {text: "invalid params"})
+
+    const {data, error} = await supabaseClient
+      .from("todos")
+      .update({title:title, description:description})
+      .match({id:id});
+
+    if(error) return invalid(400, {text:"delete failed"})
+      return { success: true}
   },
 }
