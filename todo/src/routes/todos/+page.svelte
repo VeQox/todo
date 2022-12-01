@@ -5,8 +5,9 @@
  
   onMount(async() => {
     await loadTodos();
+    console.log($Todos)
   });
-
+  
   export let form;
   let todoTitle : string = "";
   let todoDescription : string = "";
@@ -51,7 +52,7 @@
           }}>
           <div class="flex">
             <input name="title" class="w-4/6 text-center bg-neutral-900 border border-neutral-800 outline-none rounded-md" bind:value={todo.title}>
-            <input readonly class="w-2/6 text-right bg-neutral-900 border border-neutral-800 outline-none rounded-md" bind:value={todo.deadline}>
+            <input name="deadline" type="date" class="w-2/6 text-right bg-neutral-900 border border-neutral-800 outline-none rounded-md" bind:value={todo.deadline}>
           </div>
           <input name="description" class="w-full bg-neutral-900 border border-neutral-800 outline-none rounded-md" bind:value={todo.description}>
           <button type="submit"></button>

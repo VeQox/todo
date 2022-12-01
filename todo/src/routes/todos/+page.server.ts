@@ -1,5 +1,5 @@
 import type { Actions } from './$types'
-import { invalid, redirect } from '@sveltejs/kit'
+import { invalid } from '@sveltejs/kit'
 import { getSupabase } from '@supabase/auth-helpers-sveltekit'
 
 export const actions: Actions = {
@@ -17,7 +17,7 @@ export const actions: Actions = {
       || title.length > 100 
       || description.length > 250) return invalid(400, {text: "invalid params"})
 
-    const {error, data} = await supabaseClient
+    const {error} = await supabaseClient
       .from("todos")
       .insert({
         user_id: user_id,
@@ -29,20 +29,20 @@ export const actions: Actions = {
     return { success: true}
   },
   remove: async (event) => {
-    const { request, url} = event
+    const {url} = event
     const { supabaseClient } = await getSupabase(event)
 
     const id = url.searchParams.get('id');
 
     if(id === null) return invalid(400, {text:"invalid id"})
 
-    const {data, error} = await supabaseClient
+    const {error} = await supabaseClient
       .from("todos")
       .delete()
       .match({id:id});
 
     if(error) return invalid(400, {text:"delete failed"})
-      return { success: true}
+    return { success: true}
   },
   update: async (event) => {
     const { request, url } = event
@@ -51,6 +51,7 @@ export const actions: Actions = {
 
     const title = formData.get("title") as string;
     const description = formData.get("description") as string;
+    const deadline = formData.get("deadline") as string;
     const user_id = (await supabaseClient.auth.getUser()).data.user?.id;
     
     const id = url.searchParams.get('id');
@@ -61,12 +62,12 @@ export const actions: Actions = {
       || title?.length > 100 
       || description?.length > 250) return invalid(400, {text: "invalid params"})
 
-    const {data, error} = await supabaseClient
+    const {error} = await supabaseClient
       .from("todos")
-      .update({title:title, description:description})
+      .update({title:title, description:description, deadline:deadline})
       .match({id:id});
 
     if(error) return invalid(400, {text:"delete failed"})
-      return { success: true}
+    return { success: true}
   },
 }

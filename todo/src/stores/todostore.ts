@@ -1,7 +1,6 @@
 import { writable, get } from "svelte/store";
 import { supabaseClient } from "$lib/db";
 import type ITodo from "$lib/todo";
-import { component_subscribe } from "svelte/internal";
 
 const table = "todos";
 const maxTextLength = 280;
@@ -45,21 +44,53 @@ const handleUpdateEvent = (payload : any) => {
 }
 const handleDeleteEvent = (payload : any) => {
     const ID = payload.old.id;
-
+    
     Todos.update(todos => todos.filter(todo => todo.id != ID));
     console.log("handleDeleteEvent")
 }
 
 export const loadTodos = async() => {
     const { error, data } = await supabaseClient
-        .from("todos")
-        .select("*");
-
+    .from("todos")
+    .select("*");
+    
     // Todo sort data
-
+    
     await subscribeToDatabase("todos");
 
+    console.log(data)
+    
     if(error) return false;
-    Todos.set(data);
+    Todos.set(parseTodosFromDB(data));
     return true;
+}
+
+const parseTodoFromDB = (dbTodo : ITodoDB) : ITodo  => {
+    return {
+        id:dbTodo.id,
+        title:dbTodo.title,
+        description:dbTodo.description,
+        deadline:dbTodo.deadline,
+        completed:dbTodo.completed,
+        created_at:new Date(dbTodo.created_at),
+    }
+}
+
+const parseTodosFromDB = (dbTodos : ITodoDB[]) => {
+    let todos : ITodo[] = []
+    for(let dbTodo of dbTodos){
+        todos.push(parseTodoFromDB(dbTodo));
+    }
+    return todos;
+}
+
+interface ITodoDB {
+    completed:boolean,
+    id:number,
+    //yyyy-MM-ddThh-mm-ss.ms
+    created_at:string,
+    //yyyy-MM-dd
+    deadline:string,
+    description:string,
+    title:string,
 }

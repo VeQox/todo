@@ -3,6 +3,6 @@ export default interface ITodo {
   title: string,
   description: string,
   completed: boolean,
-  deadline: Date,
+  deadline: string,
   created_at: Date,
 };
