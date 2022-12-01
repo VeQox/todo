@@ -64,7 +64,11 @@ export const actions: Actions = {
 
     const {error} = await supabaseClient
       .from("todos")
-      .update({title:title, description:description, deadline:deadline})
+      .update({
+        title:title,
+        description:description, 
+        deadline:deadline
+      })
       .match({id:id});
 
     if(error) return invalid(400, {text:"delete failed"})
