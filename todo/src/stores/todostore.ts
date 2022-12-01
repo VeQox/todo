@@ -19,6 +19,8 @@ const subscribeToDatabase = async(table : string) => {
 const handleInsertEvent = (payload : any) => {
     const newTodoItem : ITodo = payload.new;
 
+    console.log(newTodoItem)
+
     Todos.update( (todo) => {
         return [...todo, newTodoItem];
     });
@@ -42,23 +44,46 @@ const handleUpdateEvent = (payload : any) => {
 }
 const handleDeleteEvent = (payload : any) => {
     const ID = payload.old.id;
-
-    console.log(payload)
-
+    
     Todos.update(todos => todos.filter(todo => todo.id != ID));
     console.log("handleDeleteEvent")
 }
 
-export const loadTodos = async() => {
-    const { error, data } = await supabaseClient
-        .from("todos")
-        .select("*");
-
-    // Todo sort data
+export const loadTodos = async(data: any[] | undefined) => { 
+    if(!data) return false;
 
     await subscribeToDatabase("todos");
 
-    if(error) return false;
-    Todos.set(data);
+    Todos.set(parseTodosFromDB(data).sort((a:ITodo, b:ITodo) => Date.parse(a.deadline) - Date.parse(b.deadline)));
     return true;
+}
+
+const parseTodoFromDB = (dbTodo : ITodoDB) : ITodo  => {
+    return {
+        id:dbTodo.id,
+        title:dbTodo.title,
+        description:dbTodo.description,
+        deadline:dbTodo.deadline,
+        completed:dbTodo.completed,
+        created_at:new Date(dbTodo.created_at),
+    }
+}
+
+const parseTodosFromDB = (dbTodos : ITodoDB[]) => {
+    let todos : ITodo[] = []
+    for(let dbTodo of dbTodos){
+        todos.push(parseTodoFromDB(dbTodo));
+    }
+    return todos;
+}
+
+interface ITodoDB {
+    completed:boolean,
+    id:number,
+    //yyyy-MM-ddThh-mm-ss.ms
+    created_at:string,
+    //yyyy-MM-dd
+    deadline:string,
+    description:string,
+    title:string,
 }

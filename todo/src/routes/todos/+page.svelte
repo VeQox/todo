@@ -2,11 +2,15 @@
   import { enhance } from "$app/forms";
   import { onMount } from "svelte";
   import { loadTodos, Todos } from "../../stores/todostore";
+ 
+  export let data : {
+    data: any[] | undefined,
+  };
 
   onMount(async() => {
-    await loadTodos();
+    await loadTodos(data.data);
   });
-
+  
   export let form;
   let todoTitle : string = "";
   let todoDescription : string = "";
@@ -16,7 +20,7 @@
 
 <form action="?/add" method="post" use:enhance={({form, data, action, cancel}) => {
         return async ({ result, update }) => {
-          if(result.type == "success"){
+          if(result.type === "success"){
             todoTitle = "";
             todoDescription = "";
           }
@@ -42,15 +46,20 @@
 
 
 <div class="w-full flex justify-center">
-  <div class="w-11/12 grid grid-cols-12">
+  <div class="w-11/12 grid grid-cols-12 space-y-5">
     {#each $Todos as todo, i}
       <div class="col-span-11 flex justify-center">
-        {todo.id}
-        {todo.title}
-        {todo.description}
-        {todo.deadline}
-        {todo.created_at}
-        {todo.completed}
+        <form method="post" action="?/update&id={todo.id}" use:enhance={({form, data, action, cancel}) => {
+            return async ({ result, update }) => {
+            };
+          }}>
+          <div class="flex">
+            <input name="title" class="w-4/6 text-center bg-neutral-900 border border-neutral-800 outline-none rounded-md" bind:value={todo.title}>
+            <input name="deadline" type="date" class="w-2/6 text-right bg-neutral-900 border border-neutral-800 outline-none rounded-md" bind:value={todo.deadline}>
+          </div>
+          <input name="description" class="w-full bg-neutral-900 border border-neutral-800 outline-none rounded-md" bind:value={todo.description}>
+          <button type="submit"></button>
+        </form>
       </div>
       <div class="">
         <form method="post" action="?/remove&id={todo.id}"  use:enhance={({form, data, action, cancel}) => {
