@@ -1,5 +1,5 @@
 import type { Actions } from './$types'
-import { invalid } from '@sveltejs/kit'
+import { invalid, redirect } from '@sveltejs/kit'
 import { getSupabase } from '@supabase/auth-helpers-sveltekit'
 
 export const actions: Actions = {
@@ -74,4 +74,19 @@ export const actions: Actions = {
     if(error) return invalid(400, {text:"delete failed"})
     return { success: true}
   },
+}
+
+import type { PageServerLoad } from './$types';
+ 
+export const load: PageServerLoad = async (event) => {
+  const { session, supabaseClient} = await getSupabase(event);
+
+  if (!session)
+    throw redirect(303, '/');
+
+  const {data} = await supabaseClient.from("todos").select("*");
+
+  return {
+    data
+  };
 }

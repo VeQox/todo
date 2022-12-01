@@ -3,9 +3,12 @@
   import { onMount } from "svelte";
   import { loadTodos, Todos } from "../../stores/todostore";
  
+  export let data : {
+    data: any[] | undefined,
+  };
+
   onMount(async() => {
-    await loadTodos();
-    console.log($Todos)
+    await loadTodos(data.data);
   });
   
   export let form;

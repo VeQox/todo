@@ -49,19 +49,12 @@ const handleDeleteEvent = (payload : any) => {
     console.log("handleDeleteEvent")
 }
 
-export const loadTodos = async() => {
-    const { error, data } = await supabaseClient
-    .from("todos")
-    .select("*");
-    
-    // Todo sort data
-    
+export const loadTodos = async(data: any[] | undefined) => { 
+    if(!data) return false;
+
     await subscribeToDatabase("todos");
 
-    console.log(data)
-    
-    if(error) return false;
-    Todos.set(parseTodosFromDB(data));
+    Todos.set(parseTodosFromDB(data).sort((a:ITodo, b:ITodo) => Date.parse(a.deadline) - Date.parse(b.deadline)));
     return true;
 }
 
