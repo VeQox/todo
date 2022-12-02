@@ -2,6 +2,7 @@
   import { enhance } from "$app/forms";
   import { onMount } from "svelte";
   import { loadTodos, Todos } from "../../stores/todostore";
+  import type { ActionData } from "./$types";
  
   export let data : {
     data: any[] | undefined,
@@ -11,7 +12,7 @@
     await loadTodos(data.data);
   });
   
-  export let form;
+  export let form : ActionData;
   let todoTitle : string = "";
   let todoDescription : string = "";
   $: todoTitleCharCount = todoTitle.length;

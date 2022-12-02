@@ -1,4 +1,4 @@
-import type { Actions } from './$types'
+import type { Actions, PageServerLoad } from './$types'
 import { invalid, redirect } from '@sveltejs/kit'
 import { getSupabase } from '@supabase/auth-helpers-sveltekit'
 
@@ -15,7 +15,7 @@ export const actions: Actions = {
     if(user_id == undefined 
       || title.length < 3 
       || title.length > 100 
-      || description.length > 250) return invalid(400, {text: "invalid params"})
+      || description.length > 250) return invalid(400, {text: "invalid params", success:false})
 
     const {error} = await supabaseClient
       .from("todos")
@@ -25,7 +25,7 @@ export const actions: Actions = {
         description:description,
       });
 
-    if(error) return invalid(400, {text:"insert failed"})
+    if(error) return invalid(400, {text:"insert failed", success:false})
     return { success: true}
   },
   remove: async (event) => {
@@ -76,7 +76,6 @@ export const actions: Actions = {
   },
 }
 
-import type { PageServerLoad } from './$types';
  
 export const load: PageServerLoad = async (event) => {
   const { session, supabaseClient} = await getSupabase(event);
