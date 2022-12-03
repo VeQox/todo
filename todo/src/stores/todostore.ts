@@ -19,8 +19,6 @@ const subscribeToDatabase = async(table : string) => {
 const handleInsertEvent = (payload : any) => {
     const newTodoItem : ITodo = payload.new;
 
-    console.log(newTodoItem)
-
     Todos.update( (todo) => {
         return [...todo, newTodoItem];
     });

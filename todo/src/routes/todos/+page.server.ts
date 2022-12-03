@@ -74,6 +74,24 @@ export const actions: Actions = {
     if(error) return invalid(400, {text:"delete failed"})
     return { success: true}
   },
+  completed: async(event) => {
+    const { request, url } = event
+    const { supabaseClient } = await getSupabase(event)
+    const formData = await request.formData()
+
+    const id = url.searchParams.get('id');
+    if(id === null) return invalid(400, {text:"invalid id"})
+
+    const completed = formData.get("completed") as string === "true";
+    
+    const {error} = await supabaseClient
+      .from("todos")
+      .update({completed:!completed})
+      .match({id:id});
+
+    if(error) return invalid(400, {text:"delete failed"})
+    return { success: true}
+  }
 }
 
  

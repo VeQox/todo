@@ -93,29 +93,30 @@
         </form>
       </div>
       -->
-        <div class="w-full grid grid-cols-12 border border-neutral-800 rounded-md">
-          <div class="">
-            <form method="post" action="?/update&id={todo.id}" use:enhance>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <div class="w-full grid grid-cols-12 border border-neutral-800 rounded-md hover:cursor-pointer" on:click={() => alert("div")}>
+          <div class="flex justify-center items-center">
+            <form method="post" action="?/completed&id={todo.id}" use:enhance={({form, data, action, cancel}) => {
+              return async ({ result, update }) => {
+              };
+            }}>
               <input name="completed" readonly bind:value={todo.completed} class="hidden">
-              <button type="submit">O</button>
+              <button type="submit" class="rounded-full {todo.completed ? "bg-green-800" : "border-2 border-neutral-800"}  w-4 h-4" on:click={(event) => event.stopPropagation()}></button>
             </form>
           </div>
           <div class="col-span-10">
             <p name="title" class="w-full border-b border-neutral-800">{todo.title}</p>
           </div>
           <div class="">
-            <form method="post" action="?/remove&id={todo.id}" use:enhance>
+            <form method="post" action="?/remove&id={todo.id}" use:enhance on:click={(event) => event.stopPropagation()}>
               <button type="submit">X</button>
             <form/>
           </div>
           <div class="flex justify-center items-center">
             <p class="text-xs text-neutral-400">{getDateFormated(todo.deadline)}</p>
           </div>
-          <div class="col-span-10">
+          <div class="col-span-11">
             <p name="title" class="w-full text-sm">{todo.description}</p>
-          </div>
-          <div>
-            <button>/</button>
           </div>
         </div>
     {/each}
