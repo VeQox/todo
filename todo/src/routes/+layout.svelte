@@ -17,7 +17,7 @@
   })
 </script>
 
-<div class="w-screen h-screen bg-neutral-900 text-neutral-400 overflow-hidden">
+<div class="w-screen h-screen bg-neutral-900 text-neutral-400 overflow-hidden selection:bg-green-800">
   <div class="border-b-2 border-neutral-800">
     <ul class="flex justify-around items-center">
       <li>

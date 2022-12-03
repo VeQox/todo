@@ -11,8 +11,29 @@
   onMount(async() => {
     await loadTodos(data.data);
   });
+
+  let dateFormatter = new Intl.RelativeTimeFormat("en", {
+    localeMatcher: "best fit", // other values: "lookup"
+    numeric: "auto", // other values: "auto"
+    style: "short", // other values: "short" or "narrow"
+  });
+
+  const getDateFormated = (date : string) => {
+    return dateFormatter.format(daysBetween(new Date(Date.now()), new Date(date)), "days")
+  }
+
+  function daysBetween(first : Date, second : Date) {
+    let one = new Date(first.getFullYear(), first.getMonth(), first.getDate());
+    let two = new Date(second.getFullYear(), second.getMonth(), second.getDate());
+
+    let millisecondsPerDay = 1000 * 60 * 60 * 24;
+    let millisBetween = two.getTime() - one.getTime();
+    let days = millisBetween / millisecondsPerDay;
+
+    return Math.floor(days);
+  }
   
-  export let form : ActionData;
+  //export let form : ActionData;
   let todoTitle : string = "";
   let todoDescription : string = "";
   $: todoTitleCharCount = todoTitle.length;
@@ -47,8 +68,9 @@
 
 
 <div class="w-full flex justify-center">
-  <div class="w-11/12 grid grid-cols-12 space-y-5">
+  <div class="w-11/12 text-center space-y-3">
     {#each $Todos as todo, i}
+    <!--
       <div class="col-span-11 flex justify-center">
         <form method="post" action="?/update&id={todo.id}" use:enhance={({form, data, action, cancel}) => {
             return async ({ result, update }) => {
@@ -70,6 +92,32 @@
           <button type="submit">X</button>
         </form>
       </div>
+      -->
+        <div class="w-full grid grid-cols-12 border border-neutral-800 rounded-md">
+          <div class="">
+            <form method="post" action="?/update&id={todo.id}" use:enhance>
+              <input name="completed" readonly bind:value={todo.completed} class="hidden">
+              <button type="submit">O</button>
+            </form>
+          </div>
+          <div class="col-span-10">
+            <p name="title" class="w-full border-b border-neutral-800">{todo.title}</p>
+          </div>
+          <div class="">
+            <form method="post" action="?/remove&id={todo.id}" use:enhance>
+              <button type="submit">X</button>
+            <form/>
+          </div>
+          <div class="flex justify-center items-center">
+            <p class="text-xs text-neutral-400">{getDateFormated(todo.deadline)}</p>
+          </div>
+          <div class="col-span-10">
+            <p name="title" class="w-full text-sm">{todo.description}</p>
+          </div>
+          <div>
+            <button>/</button>
+          </div>
+        </div>
     {/each}
   </div>
 </div>
