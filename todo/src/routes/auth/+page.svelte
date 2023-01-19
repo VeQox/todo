@@ -4,7 +4,7 @@
   let viewLogIn: boolean = true;
 </script>
 
-<div class="flex justify-center items-center h-screen">
+<div class="h-[calc(100vh-26px)] flex justify-center items-center">
   <div class="w-1/2">
     <div class="grid grid-cols-2">
       <button
