@@ -5,4 +5,5 @@ export default interface ITodo {
   completed: boolean,
   deadline: string,
   created_at: Date,
+  edit: boolean,
 };
