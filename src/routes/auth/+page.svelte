@@ -1,6 +1,5 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-
   let viewLogIn: boolean = true;
 </script>
 
