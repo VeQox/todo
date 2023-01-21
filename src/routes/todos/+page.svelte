@@ -1,15 +1,12 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { onMount } from "svelte";
-  import { loadTodos, Todos } from "../../stores/todostore";
-  import type { ActionData } from "./$types";
+	import { onMount } from "svelte";
+	import { loadTodos, Todos } from "../../stores/todostore";
+  import type { PageData } from './$types';
 
-  export let data: {
-    data: any[] | undefined;
-  };
-
-  onMount(async () => {
-    await loadTodos(data.data);
+  export let data: PageData;
+  onMount(async() => {
+    await loadTodos(data.todos);
   });
 
   let dateFormatter = new Intl.RelativeTimeFormat("en", {
@@ -40,7 +37,6 @@
     return Math.floor(days);
   }
 
-  //export let form : ActionData;
   let todoTitle: string = "";
   let todoDescription: string = "";
 </script>

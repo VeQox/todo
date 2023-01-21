@@ -1,5 +1,5 @@
 import type { Actions } from './$types'
-import { invalid, redirect } from '@sveltejs/kit'
+import { redirect } from '@sveltejs/kit'
 import { getSupabase } from '@supabase/auth-helpers-sveltekit'
 
 export const actions: Actions = {
@@ -16,15 +16,6 @@ export const actions: Actions = {
       password,
     });
 
-    if (error) {
-      return invalid(400, {
-        error: true,
-        errormsg: "invalid credentials",
-        email: email,
-      })
-    }
-
-    
     throw redirect(303, "/todos")
   },
 
@@ -40,14 +31,6 @@ export const actions: Actions = {
       password:password,
       email:email,
     });
-
-    if(error) {
-      return invalid(400, {
-        error: true,
-        errormsg: "wtf",
-        email: email,
-      });
-    };
   },
 
   logout: async (event) => {

@@ -9,22 +9,22 @@ on:
     branches:
       - release
   workflow_run:
-    workflows: ["Deploy"]
-  
+    workflows: ['Deploy']
+
 jobs:
   Deploy-Production:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - name: Install Vercel CLI
-        working-directory: ./todo
         run: npm install --global vercel@latest
+
       - name: Pull Vercel Environment Information
-        working-directory: ./todo
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
       - name: Build Project Artifacts
-        working-directory: ./todo
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
       - name: Deploy Project Artifacts to Vercel
-        working-directory: ./todo
         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
